@@ -15,9 +15,11 @@ def back_translate(sample, src, trg):
 
 
 if __name__ == '__main__':
-    sample_text = "Watford achieved a great victory at their home on November 21st. They beat Chelsea 3-2. Watford made a good start by leading the opponent 1-0 at 1st half. Chelsea was not competitive enough to win the losing game after conceding another goal."
-
-    outputs = [sample_text]
+    # sample_text = "Watford achieved a great victory at their home on November 21st. They beat Chelsea 3-2. Watford made a good start by leading the opponent 1-0 at 1st half. Chelsea was not competitive enough to win the losing game after conceding another goal."
+    with open("data/templates.txt", "r") as f:
+        samples = [t.strip() for t in f.readlines()]
+    print(samples)
+    outputs = samples
 
     src = "en"  # source language
     trgs = ["fr", "es", "de"]  # target language
@@ -31,7 +33,7 @@ if __name__ == '__main__':
         back_model = MarianMTModel.from_pretrained(back_model_name)
         back_tokenizer = MarianTokenizer.from_pretrained(back_model_name)
 
-        output_transl = back_translate(sample_text, src, trg)
+        output_transl = back_translate(samples, src, trg)
 
         for i in range(len(output_transl)):
             output_transl2 = back_translate(output_transl[i], src, trg)
