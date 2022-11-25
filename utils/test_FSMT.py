@@ -29,3 +29,4 @@ gen = back_model.generate(do_sample=False, num_beams=10, num_return_sequences=10
 output = back_tokenizer.batch_decode(gen, skip_special_tokens=True)
 for i in range(len(output)):
     print(output[i]+'\n')
+
