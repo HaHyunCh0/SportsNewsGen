@@ -8,28 +8,28 @@ DATA_TOKEN_MAP = {
     '[HomeTeam]': 'Watford',
     '[AwayTeam]': 'Chelsea',
     '[DateTime]': 'November',
-    '[FTHG]': '3',
-    '[FTAG]': '2',
-    '[HTHG]': '1',
-    '[HTAG]': '0'
+    '[FTHG]': '6',
+    '[FTAG]': '5',
+    '[HTHG]': '4',
+    '[HTAG]': '3'
 }
 
 INV_DATA_TOKEN_MAP = {
     'Watford': '[HomeTeam]',
     'Chelsea': '[AwayTeam]',
     'November': '[Datetime]',
-    '3': '[FTHG]',
-    '2': '[FTAG]',
-    '1': '[HTHG]',
-    '0': '[HTAG]'
+    '6': '[FTHG]',
+    '5': '[FTAG]',
+    '4': '[HTHG]',
+    '3': '[HTAG]'
 }
 
 
 def back_translate(sample, src, trg):
-    input_ids = tokenizer(sample, return_tensors="pt")
+    input_ids = tokenizer(sample, padding=True, return_tensors="pt")
     gen = model.generate(**input_ids)
     translated = tokenizer.batch_decode(gen, skip_special_tokens=True)
-    back_input_ids = back_tokenizer(translated, return_tensors="pt")
+    back_input_ids = back_tokenizer(translated, padding=True, return_tensors="pt")
     back_gen = back_model.generate(do_sample=False, num_beams=10, num_return_sequences=10, no_repeat_ngram_size=4, num_beam_groups=1, **back_input_ids)
 
     output = back_tokenizer.batch_decode(back_gen, skip_special_tokens=True)
@@ -79,7 +79,7 @@ if __name__ == '__main__':
             outputs = outputs + output_transl2
 
     output_set = set(outputs)
-    with open("augmented.txt", "w") as fw:
+    with open(f"{args.filename.split('.')[0]}_augmented.txt", "w") as fw:
         for output in output_set:
             fw.write(output + '\n')
 
