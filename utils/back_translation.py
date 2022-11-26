@@ -1,5 +1,28 @@
+import argparse
+
 from transformers import MarianTokenizer, MarianMTModel
 from typing import List
+
+
+DATA_TOKEN_MAP = {
+    '[HomeTeam]': 'Watford',
+    '[AwayTeam]': 'Chelsea',
+    '[DateTime]': 'November',
+    '[FTHG]': '3',
+    '[FTAG]': '2',
+    '[HTHG]': '1',
+    '[HTAG]': '0'
+}
+
+INV_DATA_TOKEN_MAP = {
+    'Watford': '[HomeTeam]',
+    'Chelsea': '[AwayTeam]',
+    'November': '[Datetime]',
+    '3': '[FTHG]',
+    '2': '[FTAG]',
+    '1': '[HTHG]',
+    '0': '[HTAG]'
+}
 
 
 def back_translate(sample, src, trg):
@@ -14,11 +37,27 @@ def back_translate(sample, src, trg):
     return output
 
 
+def replace_data_tokens(sample):
+    sample_r = sample
+    for key in DATA_TOKEN_MAP:
+        sample_r = sample_r.replace(key, DATA_TOKEN_MAP[key])
+    return sample_r
+
+
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filename')
+    args = parser.parse_args()
+    samples = list()
+
     # sample_text = "Watford achieved a great victory at their home on November 21st. They beat Chelsea 3-2. Watford made a good start by leading the opponent 1-0 at 1st half. Chelsea was not competitive enough to win the losing game after conceding another goal."
-    with open("data/templates.txt", "r") as f:
-        samples = [t.strip() for t in f.readlines()]
+    with open(args.filename, "r") as f:
+        for t in f.readlines():
+            sample = replace_data_tokens(t.strip())
+            samples.append(sample)
     print(samples)
+
     outputs = samples
 
     src = "en"  # source language
@@ -40,8 +79,9 @@ if __name__ == '__main__':
             outputs = outputs + output_transl2
 
     output_set = set(outputs)
-    for output in output_set:
-        print(output)
+    with open("augmented.txt", "w") as fw:
+        for output in output_set:
+            fw.write(output + '\n')
 
     print(len(output_set))
 
