@@ -71,7 +71,7 @@ if __name__ == '__main__':
     outputs = samples
 
     src = "en"  # source language
-    trgs = ["fr", "es", "de"]  # target language
+    trgs = ["fr", "es", "de", "it"]  # target language
 
     for trg in trgs:
         print(f"Back-translate using {trg}")
