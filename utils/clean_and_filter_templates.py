@@ -3,14 +3,27 @@ FILE_LIST = [
 ]
 CORRECT_TOKEN_LIST = ["[DateTime]", "[HomeTeam]", "[AwayTeam]", "[FTHG]", "[FTAG]", "[HTHG]", "[HTAG]"]
 CORRUPTED_TOKEN_MAP = {
-"[date]": "[DateTime]", "[datetime]": "[DateTime]", "[dates]": "[DateTime]", "[Date]": "[DateTime]", "[Datetime]": "[DateTime]",
-"[Dates]": "[DateTime]", "[datatime]": "[DateTime]", "[Datatime]": "[DateTime]", "[data time]": "[DateTime]",
-"Shelsea": "[AwayTeam]", "Chelse": "[AwayTeam]", "Chelsia": "[AwayTeam]", "Chelmea": "[AwayTeam]",
-"Chelea": "[AwayTeam]", "Chelza": "[AwayTeam]", "Chellsea": "[AwayTeam]", "Chelsee": "[AwayTeam]",
-"Chelesea": "[AwayTeam]", "Chel": "[AwayTeam]", "Chellea": "[AwayTeam]",
-" she ": " they ", " he ": " they ", " his ": " their ", " her ": " their ",
-" He ": " They ", " She ": " They ", " His ": " Their ", " Her ": " Their "
+    "[date]": "[DateTime]", "[datetime]": "[DateTime]", "[dates]": "[DateTime]", "[Date]": "[DateTime]", "[Datetime]": "[DateTime]",
+    "[Dates]": "[DateTime]", "[datatime]": "[DateTime]", "[Datatime]": "[DateTime]", "[data time]": "[DateTime]",
+    "Wadford": "[HomeTeam]", "Wat Ford": "[HomeTeam]", "Wathford": "[HomeTeam]", "Wathord": "[HomeTeam]",
+    "WatFORD": "[HomeTeam]", "Watfort": "[HomeTeam]", "Watby": "[HomeTeam]", "Watworth": "[HomeTeam]",
+    "Wattford": "[HomeTeam]", "Watfor ": "[HomeTeam]", "Watord": "[HomeTeam]",
+    "wadford": "[HomeTeam]", "wat Ford": "[HomeTeam]", "wathford": "[HomeTeam]", "wathord": "[HomeTeam]",
+    "watFORD": "[HomeTeam]", "watfort": "[HomeTeam]", "watby": "[HomeTeam]", "watworth": "[HomeTeam]",
+    "wattford": "[HomeTeam]", "watfor ": "[HomeTeam]", "watord": "[HomeTeam]", "watford": "[HomeTeam]",
+    "Shelsea": "[AwayTeam]", "Chelse": "[AwayTeam]", "Chelsia": "[AwayTeam]", "Chelmea": "[AwayTeam]",
+    "Chelea": "[AwayTeam]", "Chelza": "[AwayTeam]", "Chellsea": "[AwayTeam]", "Chelsee": "[AwayTeam]",
+    "Chelesea": "[AwayTeam]", "Chel": "[AwayTeam]", "Chellea": "[AwayTeam]",
+    "shelsea": "[AwayTeam]", "chelse": "[AwayTeam]", "chelsia": "[AwayTeam]", "chelmea": "[AwayTeam]",
+    "chelea": "[AwayTeam]", "chelza": "[AwayTeam]", "chellsea": "[AwayTeam]", "chelsee": "[AwayTeam]",
+    "chelesea": "[AwayTeam]", "chel": "[AwayTeam]", "chellea": "[AwayTeam]", "chelsea": "[AwayTeam]",
+    " she ": " they ", " he ": " they ", " his ": " their ", " her ": " their ",
+    " He ": " They ", " She ": " They ", " His ": " Their ", " Her ": " Their ",
+    "six": "6", "five": "5", "four": "4", "three": "3"
 }
+FILTER_LIST = [
+    "The month", "In the month", "On the month", "The [DateTime] month"
+]
 
 
 def clean_tokens_and_corefs(f_name):
@@ -28,6 +41,14 @@ def clean_tokens_and_corefs(f_name):
 def filter_templates(f_name, corrected_list):
     filtered_list = list()
     for line in corrected_list:
+        to_filter = 0
+        for filt in FILTER_LIST:
+            if filt in line:
+                to_filter = 1
+                break
+        if to_filter == 1:
+            continue
+
         token_in = 0
         for token in CORRECT_TOKEN_LIST:
             if token not in line:
