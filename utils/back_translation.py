@@ -18,7 +18,7 @@ DATA_TOKEN_MAP = {
 INV_DATA_TOKEN_MAP = {
     'Watford': '[HomeTeam]',
     'Chelsea': '[AwayTeam]',
-    'November': '[Datetime]',
+    'November': '[DateTime]',
     '6': '[FTHG]',
     '5': '[FTAG]',
     '4': '[HTHG]',
