@@ -19,7 +19,7 @@ CORRUPTED_TOKEN_MAP = {
     "chelesea": "[AwayTeam]", "chel": "[AwayTeam]", "chellea": "[AwayTeam]", "chelsea": "[AwayTeam]",
     " she ": " they ", " he ": " they ", " his ": " their ", " her ": " their ",
     " He ": " They ", " She ": " They ", " His ": " Their ", " Her ": " Their ",
-    "six": "6", "five": "5", "four": "4", "three": "3"
+    "seven": "7", "six": "6", "five": "5", "four": "4"
 }
 FILTER_LIST = [
     "The month", "In the month", "On the month", "The [DateTime] month"
