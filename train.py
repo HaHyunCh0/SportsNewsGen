@@ -4,8 +4,8 @@ import os
 import sys
 
 import datasets
+from datasets import load_dataset, load_metric
 import evaluate
-from datasets import load_metric
 import numpy as np
 import nltk
 import torch
@@ -58,8 +58,8 @@ def main():
 
     dataset = create_dataset(args.data_path)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-    rouge = evaluate.load("rouge")
+    model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
+    metric = evaluate.load("rouge")
 
     def preprocess_function(examples):
         model_inputs = tokenizer(examples["data"], max_length=args.max_source_length, padding=False, truncation=True)
