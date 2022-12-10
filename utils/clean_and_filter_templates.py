@@ -1,5 +1,11 @@
 # ENTER filename in this list
 FILE_LIST = [
+    "./data/templates_1_home_win_win_v11.txt", "./data/templates_2_home_draw_win_v4.txt", "./data/templates_3_home_lose_win_v6.txt",
+    "./data/templates_4_away_win_win_v5.txt", "./data/templates_5_away_draw_win_v5.txt", "./data/templates_6_away_lose_win_v5.txt",
+    "./data/templates_7_home_win_draw_v5.txt", "./data/templates_8_home_lose_draw_v5.txt", "./data/templates_9_away_win_draw_v5.txt",
+    "./data/templates_10_away_lose_draw_v5.txt", "./data/templates_11_neutral_draw_draw_v5.txt", "./data/templates_12_home_lose_lose_v5.txt",
+    "./data/templates_13_home_draw_lose_v5.txt", "./data/templates_14_home_win_lose_v5.txt", "./data/templates_16_away_draw_lose_v5.txt",
+    "./data/templates_17_away_win_lose_v5.txt"
 ]
 CORRECT_TOKEN_LIST = ["[DateTime]", "[HomeTeam]", "[AwayTeam]", "[FTHG]", "[FTAG]", "[HTHG]", "[HTAG]"]
 CORRUPTED_TOKEN_MAP = {
@@ -19,7 +25,7 @@ CORRUPTED_TOKEN_MAP = {
     "chelesea": "[AwayTeam]", "chel": "[AwayTeam]", "chellea": "[AwayTeam]", "chelsea": "[AwayTeam]",
     " she ": " they ", " he ": " they ", " his ": " their ", " her ": " their ",
     " He ": " They ", " She ": " They ", " His ": " Their ", " Her ": " Their ",
-    "seven": "7", "six": "6", "five": "5", "four": "4"
+    "seven": "[FTHG]", "six": "[FTAG]", "five": "[HTHG]", "four": "[HTAG]"
 }
 FILTER_LIST = [
     "The month", "In the month", "On the month", "The [DateTime] month"
