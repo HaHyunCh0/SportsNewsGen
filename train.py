@@ -26,16 +26,18 @@ def args_parse():
     parser.add_argument('--data_path', type=str, default='./data')
     parser.add_argument('--model_name', type=str, default="facebook/bart-base", help="a hf model name")
     parser.add_argument('--epochs', type=int, default=1)
+    parser.add_argument('--batch_size', type=int, default=4)
     parser.add_argument('--learning_rate', type=float, default=5e-5)
     parser.add_argument('--max_source_length', type=int, default=1024)
-    parser.add_argument('--max_target_length', type=int, default=128)
+    parser.add_argument('--max_target_length', type=int, default=512)
     parser.add_argument('--num_beams', type=int, default=None)
     parser.add_argument('--label_smoothing_factor', type=float, default=0.0)
     parser.add_argument('--no_repeat_ngram', type=int, default=3)
     parser.add_argument('--logging_strategy', type=str, default='steps')
     parser.add_argument('--logging_steps', type=int, default=500)
-    parser.add_argument('--save_strategy', type=str, default='no')
-    parser.add_argument('--save_steps', type=int, default=5000)
+    parser.add_argument('--save_strategy', type=str, default='epoch')
+    parser.add_argument('--output_dir', type=str, default='./results')
+    # parser.add_argument('--save_steps', type=int, default=10000)
     return parser.parse_args()
 
 
@@ -97,17 +99,17 @@ def main():
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
     training_args = Seq2SeqTrainingArguments(
-        output_dir="./results",
+        output_dir=args.output_dir,
         evaluation_strategy="epoch",
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
         weight_decay=0.01,
         num_train_epochs=args.epochs,
         learning_rate=args.learning_rate,
         predict_with_generate=True,
         label_smoothing_factor=args.label_smoothing_factor,
         generation_num_beams=args.num_beams,
-        save_steps=args.save_steps
+        # save_steps=args.save_steps
     )
     trainer = Seq2SeqTrainer(
         model=model,
