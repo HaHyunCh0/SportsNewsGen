@@ -1,15 +1,41 @@
-DATA_PATH = 'data/'
-RAW_DATA = 'new_df2.tsv'
-DATA_FILES = ['train.tsv', 'val.tsv', 'test.tsv']
-START_TOKENS = ["<HomeTeam>", "<AwayTeam>", "<FTHG>", "<FTAG>", "<HTHG>", "<HTAG>", "<Date>"]
-END_TOKENS = ["</HomeTeam>", "</AwayTeam>", "</FTHG>", "</FTAG>", "</HTHG>", "</HTAG>", "</Date>"]
+import os
+
+
+DATA_PATH = ''
+RAW_DATA = ''
+START_TOKENS = ["<HomeTeam>", "<AwayTeam>", "<FTHG>", "<FTAG>", "<HTHG>", "<HTAG>", "<FTR>", "<HTR>", "<Bias>", "<Date>"]
+END_TOKENS = ["</HomeTeam>", "</AwayTeam>", "</FTHG>", "</FTAG>", "</HTHG>", "</HTAG>", "</FTR>", "</HTR>", "</Bias>", "</Date>"]
 
 
 def create_source_target(data):
     s_t_pairs = list()
     for d in data:
         vs = d.split('\t')
-        s = f"<Date>{vs[9]}</Date>"
+        s = f"<Date>{vs[11]}</Date>"
+        for i in range(len(START_TOKENS)-4):
+            s = s + f"{START_TOKENS[i]}{vs[i+2]}{END_TOKENS[i]}"
+        t = d.split('"')[1]
+        s_t_pairs.append('\t'.join([s,t]))
+    return s_t_pairs
+
+
+def create_source_target_with_results(data):
+    s_t_pairs = list()
+    for d in data:
+        vs = d.split('\t')
+        s = f"<Date>{vs[11]}</Date>"
+        for i in range(len(START_TOKENS)-2):
+            s = s + f"{START_TOKENS[i]}{vs[i+2]}{END_TOKENS[i]}"
+        t = d.split('"')[1]
+        s_t_pairs.append('\t'.join([s,t]))
+    return s_t_pairs
+
+
+def create_source_target_with_bias(data):
+    s_t_pairs = list()
+    for d in data:
+        vs = d.split('\t')
+        s = f"<Date>{vs[11]}</Date>"
         for i in range(len(START_TOKENS)-1):
             s = s + f"{START_TOKENS[i]}{vs[i+2]}{END_TOKENS[i]}"
         t = d.split('"')[1]
@@ -18,7 +44,7 @@ def create_source_target(data):
 
 
 if __name__ == '__main__':
-    with open(DATA_PATH + RAW_DATA, 'r', encoding='utf8') as f:
+    with open(RAW_DATA, 'r', encoding='utf8') as f:
         data = list()
         for line in f:
             if line[0] == '"':
@@ -26,6 +52,8 @@ if __name__ == '__main__':
             data.append(line.rstrip())
     data = data[1:]
     s_t_pairs = create_source_target(data)
+    # s_t_pairs = create_source_target_with_results(data)
+    # s_t_pairs = create_source_target_with_bias(data)
     pairs_len = len(s_t_pairs)
     train_limit = int(pairs_len * 0.8)
     val_limit = int(pairs_len * 0.9)
@@ -46,10 +74,13 @@ if __name__ == '__main__':
     print(len(val_d))
     print(len(test_d))
 
-    with open('train.tsv', 'w') as t_f:
+    if not os.path.exists(DATA_PATH):
+        os.mkdir(DATA_PATH)
+
+    with open(DATA_PATH + 'train.tsv', 'w') as t_f:
         t_f.write('\n'.join(train_d))
-    with open('val.tsv', 'w') as v_f:
+    with open(DATA_PATH + 'val.tsv', 'w') as v_f:
         v_f.write('\n'.join(val_d))
-    with open('test.tsv', 'w') as te_f:
+    with open(DATA_PATH + 'test.tsv', 'w') as te_f:
         te_f.write('\n'.join(test_d))
 
