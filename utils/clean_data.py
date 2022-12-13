@@ -6,10 +6,7 @@ import pandas as pd
 def drop_na(df):
     # remove rows with NaN
     na_dropped = df.dropna()
-    print(na_dropped)
     na_dropped.reset_index(drop=True, inplace=True)
-    print(na_dropped)
-    # na_dropped.to_csv('../data/raw_na_dropped.csv', index=False, encoding='utf-8')
     return na_dropped
 
 
@@ -17,7 +14,6 @@ def clean_timestamp(df):
     # Datetime to date
     # Remove time as it's unnecessary
     df['Date'] = pd.to_datetime(df['DateTime']).dt.date
-    print(df)
     return df
 
 
