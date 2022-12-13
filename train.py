@@ -61,7 +61,9 @@ def main():
     dataset = create_dataset(args.data_path)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
-    metric = evaluate.load("rouge")
+
+    rouge_metric = evaluate.load("rouge")
+    bertscore_metric = evaluate.load("bertscore")
 
     def preprocess_function(examples):
         model_inputs = tokenizer(examples["data"], max_length=args.max_source_length, padding=False, truncation=True)
@@ -80,10 +82,18 @@ def main():
         labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-        result = metric.compute(predictions=decoded_preds, references=decoded_labels, rouge_types=['rouge1', 'rouge2', 'rougeL'])
-        result = {k: round(v * 100, 4) for k, v in result.items()}
+        rouge = rouge_metric.compute(predictions=decoded_preds, references=decoded_labels, rouge_types=['rouge1', 'rouge2', 'rougeL'])
+        rouge = {k: round(v * 100, 4) for k, v in rouge.items()}
+        bert_s = bertscore_metric.compute(predictions=decoded_preds, references=decoded_labels, model_type="bert-base-uncased")
+        bert_s["precision"] = np.mean(bert_s["precision"])
+        bert_s["recall"] = np.mean(bert_s["recall"])
+        bert_s["f1"] = round(np.mean(bert_s["f1"]) * 100, 4)
         prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
+
+        result = rouge
+        result["bertscore_f1"] = bert_s["f1"] # {"precision": bert_s["precision"], "recall": bert_s["recall"], "f1": bert_s["f1"]}
         result["gen_len"] = np.mean(prediction_lens)
+        # return {"rouge": result_rouge, "bertscore": result_berts}
         return result
 
     tokenized_dataset = dataset.map(preprocess_function, batched=True)
@@ -142,7 +152,6 @@ def main():
             max_length=max_length, num_beams=training_args.generation_num_beams, metric_key_prefix="eval", no_repeat_ngram_size=args.no_repeat_ngram
         )
         metrics["eval_samples"] = len(eval_dataset)
-
         trainer.log_metrics("eval", metrics)
         trainer.save_metrics("eval", metrics)
 
