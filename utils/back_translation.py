@@ -61,12 +61,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     samples = list()
 
-    # sample_text = "Watford achieved a great victory at their home on November 21st. They beat Chelsea 3-2. Watford made a good start by leading the opponent 1-0 at 1st half. Chelsea was not competitive enough to win the losing game after conceding another goal."
     with open(args.filename, "r") as f:
         for t in f.readlines():
             sample = replace_data_tokens(t.strip())
             samples.append(sample)
-    # print(samples)
 
     outputs = samples
 
@@ -84,9 +82,6 @@ if __name__ == '__main__':
 
         output_transl = back_translate(samples, src, trg)
         outputs = outputs + output_transl
-        # for i in range(len(output_transl)):
-        #     output_transl2 = back_translate(output_transl[i], src, trg)
-        #     outputs = outputs + output_transl2
 
     output_set = set(outputs)
     with open(f"{args.filename.split('.')[0]}_augmented.txt", "w") as fw:
