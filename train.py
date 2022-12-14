@@ -91,9 +91,8 @@ def main():
         prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
 
         result = rouge
-        result["bertscore_f1"] = bert_s["f1"] # {"precision": bert_s["precision"], "recall": bert_s["recall"], "f1": bert_s["f1"]}
+        result["bertscore_f1"] = bert_s["f1"]
         result["gen_len"] = np.mean(prediction_lens)
-        # return {"rouge": result_rouge, "bertscore": result_berts}
         return result
 
     tokenized_dataset = dataset.map(preprocess_function, batched=True)
