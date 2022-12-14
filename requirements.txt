@@ -1,0 +1,9 @@
+numpy
+torch
+transformers
+datasets
+sentencepiece
+sacremoses
+evaluate
+rouge-score
+bert_score
