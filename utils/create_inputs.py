@@ -94,12 +94,12 @@ if __name__ == '__main__':
         os.mkdir(DATA_PATH)
 
     with open(DATA_PATH + 'train.tsv', 'w') as t_f:
-        t_f.write('\t'.join(['data', 'text']))
+        t_f.write('\t'.join(['data', 'text']) + '\n')
         t_f.write('\n'.join(train_d))
     with open(DATA_PATH + 'val.tsv', 'w') as v_f:
-        v_f.write('\t'.join(['data', 'text']))
+        v_f.write('\t'.join(['data', 'text']) + '\n')
         v_f.write('\n'.join(val_d))
     with open(DATA_PATH + 'test.tsv', 'w') as te_f:
-        te_f.write('\t'.join(['data', 'text']))
+        t_f.write('\t'.join(['data', 'text']) + '\n')
         te_f.write('\n'.join(test_d))
 
